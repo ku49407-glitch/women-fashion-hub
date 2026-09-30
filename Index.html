@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Women Fashion Hub</title>
+
+  <meta name="description"
+        content="Discover dresses, shoes, bags, jewelry and beauty products.">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      color: #222;
+    }
+
+    header {
+      background: #111;
+      color: white;
+      padding: 22px 15px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    .container {
+      width: 94%;
+      max-width: 1200px;
+      margin: 25px auto;
+    }
+
+    .controls {
+      background: white;
+      padding: 18px;
+      border-radius: 14px;
+      margin-bottom: 25px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .search {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      outline: none;
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    select {
+      padding: 11px;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      background: white;
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .product {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      transition: 0.2s;
+    }
+
+    .product:hover {
+      transform: translateY(-4px);
+    }
+
+    .product img {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .product-info {
+      padding: 14px;
+    }
+
+    .category {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 6px;
+    }
+
+    .product h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .view-btn,
+    .heart-btn {
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .view-btn {
+      flex: 1;
+      background: #111;
+      color: white;
+    }
+
+    .heart-btn {
+      width: 45px;
+      background: #eee;
+      font-size: 18px;
+    }
+
+    .heart-btn.active {
+      background: #ffd6d6;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      display: none;
+      background: white;
+      border-radius: 12px;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding: 25px;
+      background: #111;
+      color: #ccc;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .products {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 650px) {
+      .products {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .product img {
+        height: 190px;
+      }
+
+      .product h3 {
+        font-size: 15px;
+      }
+
+      .price {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .products {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .product img {
+        height: 160px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Women Fashion Hub</h1>
+  <p>Fashion • Beauty • Accessories</p>
+</header>
+
+<div class="container">
+
+  <div class="controls">
+
+    <input
+      type="text"
+      id="search"
+      class="search"
+      placeholder="Search products..."
+    >
+
+    <div class="filters">
+
+      <select id="category">
+        <option value="all">All Categories</option>
+        <option value="Dresses">Dresses</option>
+        <option value="Shoes">Shoes</option>
+        <option value="Bags">Bags</option>
+        <option value="Jewelry">Jewelry</option>
+        <option value="Beauty">Beauty</option>
+      </select>
+
+      <select id="sort">
+        <option value="default">Sort Products</option>
+        <option value="low">Price: Low to High</option>
+        <option value="high">Price: High to Low</option>
+        <option value="name">Name: A to Z</option>
+      </select>
+
+    </div>
+  </div>
+
+  <div id="products" class="products"></div>
+
+  <div id="noResults" class="no-results">
+    <h3>No products found</h3>
+    <p>Try another search or category.</p>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 Women Fashion Hub — All Rights Reserved
+</footer>
+
+<script>
+
+const products = [
+
+  {
+    name: "Elegant Summer Dress",
+    category: "Dresses",
+    price: 29.99,
+    image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=600&q=80"
+  },
+
+  {
+    name: "Classic Black Dress",
+    category: "Dresses",
+    price: 39.99,
+    image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=600&q=80"
+  },
+
+  {
+    name: "Women's Fashion Sneakers",
+    category: "Shoes",
+    price: 45.99,
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
+  },
+
+  {
+    name: "Elegant High Heels",
+    category: "Shoes",
+    price: 54.99,
+    image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80"
+  },
+
+  {
+    name: "Luxury Women's Handbag",
+    category: "Bags",
+    price: 49.99,
+    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80"
+  },
+
+  {
+    name: "Classic Shoulder Bag",
+    category: "Bags",
+    price: 35.99,
+    image: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=600&q=80"
+  },
+
+  {
+    name: "Gold Fashion Necklace",
+    category: "Jewelry",
+    price: 19.99,
+    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80"
+  },
+
+  {
+    name: "Elegant Earrings",
+    category: "Jewelry",
+    price: 14.99,
+    image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80"
+  },
+
+  {
+    name: "Beauty Makeup Set",
+    category: "Beauty",
+    price: 25.99,
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=600&q=80"
+  },
+
+  {
+    name: "Luxury Lipstick Set",
+    category: "Beauty",
+    price: 17.99,
+    image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80"
+  }
+
+];
+
+const productsContainer = document.getElementById("products");
+const searchInput = document.getElementById("search");
+const categorySelect = document.getElementById("category");
+const sortSelect = document.getElementById("sort");
+const noResults = document.getElementById("noResults");
+
+function displayProducts() {
+
+  let filtered = [...products];
+
+  const searchText = searchInput.value.toLowerCase();
+  const category = categorySelect.value;
+  const sort = sortSelect.value;
+
+  filtered = filtered.filter(product => {
+
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchText) ||
+      product.category.toLowerCase().includes(searchText);
+
+    const matchesCategory =
+      category === "all" ||
+      product.category === category;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  if (sort === "low") {
+    filtered.sort((a, b) => a.price - b.price);
+  }
+
+  if (sort === "high") {
+    filtered.sort((a, b) => b.price - a.price);
+  }
+
+  if (sort === "name") {
+    filtered.sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+  }
+
+  productsContainer.innerHTML = "";
+
+  if (filtered.length === 0) {
+    noResults.style.display = "block";
+    return;
+  }
+
+  noResults.style.display = "none";
+
+  filtered.forEach(product => {
+
+    const card = document.createElement("div");
+
+    card.className = "product";
+
+    card.innerHTML = `
+
+      <img
+        src="${product.image}"
+        alt="${product.name}"
+        loading="lazy"
+      >
+
+      <div class="product-info">
+
+        <div class="category">
+          ${product.category}
+        </div>
+
+        <h3>
+          ${product.name}
+        </h3>
+
+        <div class="price">
+          $${product.price.toFixed(2)}
+        </div>
+
+        <div class="buttons">
+
+          <button
+            class="view-btn"
+            onclick="viewProduct('${product.name}')"
+          >
+            View Product
+          </button>
+
+          <button
+            class="heart-btn"
+            onclick="toggleFavorite(this)"
+          >
+            ♡
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+    productsContainer.appendChild(card);
+
+  });
+
+}
+
+function viewProduct(name) {
+
+  alert(
+    "Product selected: " +
+    name +
+    "\\n\\nAffiliate/product link can be added here later."
+  );
+
+}
+
+function toggleFavorite(button) {
+
+  button.classList.toggle("active");
+
+  if (button.classList.contains("active")) {
+    button.textContent = "♥";
+  } else {
+    button.textContent = "♡";
+  }
+
+}
+
+searchInput.addEventListener(
+  "input",
+  displayProducts
+);
+
+categorySelect.addEventListener(
+  "change",
+  displayProducts
+);
+
+sortSelect.addEventListener(
+  "change",
+  displayProducts
+);
+
+displayProducts();
+
+</script>
+
+</body>
+</html>
